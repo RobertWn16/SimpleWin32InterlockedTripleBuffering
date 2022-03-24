@@ -51,7 +51,7 @@ int main() {
         0,
         NULL);
 
-    //This is bad! Use an Event for sync that triggers consumer that producer is ready;
+    //This is bad! Use an Event for sync that triggers consumer when producer is ready;
     Sleep(100);
 
     while (TRUE)
