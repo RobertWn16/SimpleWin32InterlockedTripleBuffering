@@ -68,4 +68,7 @@ int main() {
     //This is just for testing. The program will have memory leaks.
     WaitForSingleObject(hThread, INFINITE);
     CloseHandle(hThread);
+    CloseHandle(hEvent);
+    
+    free(queue);
 }
