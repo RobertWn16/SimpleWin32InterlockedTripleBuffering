@@ -10,6 +10,8 @@ int index;
 int mask = 0;
 char value[3][40];
 
+HANDLE hEvent;
+
 void producer()
 {
     for (int i = 0; i < 3; i++) {
@@ -18,6 +20,7 @@ void producer()
         queue[i] = malloc(sizeof(char*));
         queue[i] = value;
     }
+    SetEvent(hEvent);
     while (TRUE)
     {
         sprintf(value[index % 3], "Test %d", index);
@@ -44,16 +47,18 @@ void consumer()
 }
 
 int main() {
+    hEvent = CreateEvent(NULL, TRUE, FALSE, 0, NULL);
+    ResetEvent(hEvent);
+    
     HANDLE hThread = CreateThread(0,
         0,
         (LPTHREAD_START_ROUTINE)producer,
         NULL,
         0,
         NULL);
-
-    //This is bad! Use an Event for sync that triggers consumer when producer is ready;
-    Sleep(100);
-
+    
+    WaitForSingleObject(hEvent, INFINITE);
+    
     while (TRUE)
     {
         consumer();
@@ -63,4 +68,10 @@ int main() {
     //This is just for testing. The program will have memory leaks.
     WaitForSingleObject(hThread, INFINITE);
     CloseHandle(hThread);
+    CloseHandle(hEvent);
+    
+    for (int i = 0; i < 3; i++)
+    {
+        free(queue[i]);
+    }
 }
