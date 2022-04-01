@@ -70,5 +70,8 @@ int main() {
     CloseHandle(hThread);
     CloseHandle(hEvent);
     
-    free(queue);
+    for (int i = 0; i < 3; i++)
+    {
+        free(queue[i]);
+    }
 }
